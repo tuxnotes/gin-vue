@@ -222,3 +222,7 @@ handler即使r.POST参数中的func部分。
 mkdir controller
 cd controller && touch UserController.go
 ```
+
+# 5 用户登录
+先提交一个版本
+首先定义路由，然后定义控制器
