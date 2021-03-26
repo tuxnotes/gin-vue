@@ -207,3 +207,18 @@ func InitDB() *gorm.DB {
 
 前面引入了gorm实现了用户注册API，但是代码都写在了一个文件中，这样下去此文件将会变得越来越大，代码越来越难以维护。
 因此这里重构代码，使得项目更具有结构性和维护性。
+
+在重构之前，使用git将代码添加到版本库，并进行一次提交。
+
+## 4.1 重构
+首先将将model(即User struct)迁移到专门的包，model包。
+在ginessential目录下创建model目录，在model目录下创建user.go文件
+
+## 4.2 将handler迁移到控制器的包
+
+handler即使r.POST参数中的func部分。
+
+```
+mkdir controller
+cd controller && touch UserController.go
+```
