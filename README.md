@@ -226,3 +226,34 @@ cd controller && touch UserController.go
 # 5 用户登录
 先提交一个版本
 首先定义路由，然后定义控制器
+
+# 6 使用jwt生成token并认证路由
+
+使用jwt实现用户认证和未知用户登录状态
+首先安装jwt包到我们的项目中
+```bash
+go get -u github.com/dgrijalva/jwt-go
+```
+在common目录下创建jwt.go文件
+
+token由三部分组成：
+- 第一部分：协议头，存储token使用的加密协议
+- 第二部分：负载，payload，claim部分存储的信息
+- 第三部分：前两个部分加上key后的hash值
+
+```bash
+echo $第一部分 | base64 -D
+```
+查看第一部分的内容
+```bash
+echo $第二部分 | base64 -D
+```
+查看第二部分的内容
+
+接下来写认证中间件，创建新的目录middleware,并在目录下创建AuthMiddleware.go文件
+
+创建用户信息的路由
+
+接着用中间件保护用户信息接口
+
+

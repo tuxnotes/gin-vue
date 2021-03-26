@@ -84,11 +84,26 @@ func Login(ctx *gin.Context) {
 		return
 	}
 	// 密码正确发放token给前端
-	token := "11" // 先用简单的
+	// token := "11" // 先用简单的
+	token, err := common.ReleaseToken(user)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "系统异常"})
+		log.Printf("token generate error: %v\n", err)
+		return
+	}
 	// 返回结果
 	ctx.JSON(200, gin.H{"code": 200,
 		"data": gin.H{"token": token},
 		"msg":  "登录成功"})
+}
+
+func Info(ctx *gin.Context) {
+	// 获取用户信息的时候，用户已经通过了认证，索引从上下文中获取到用户的信息
+	user, _ := ctx.Get("user")
+	ctx.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"data": gin.H{"user": user},
+	})
 }
 
 func isTelephoneExist(db *gorm.DB, telephone string) bool {
