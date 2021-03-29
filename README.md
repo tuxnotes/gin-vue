@@ -291,6 +291,71 @@ func Info(ctx *gin.Context) {
 项目目录下新建response目录
 
 然后修改controller中的注册等模块的代码
+# 8 从文件中读取配置
+
+数据库连接信息分散在各个文件，管理起来就很不方便，所以需要进行配置集中化管理。这里在项目中引入config组件：viper
+
+安装
+```bash
+go get github.com/spf13/viper
+```
+然后在项目目录下创建一个config目录,使用yaml文件来写我们的配置项application.yml
+```yaml
+server:
+  port: 1016
+
+datasource:
+  driveName: mysql
+  host: 127.0.0.1
+  port: 3306
+  database: ginessential
+  username: root
+  password: root
+  charset: utf8
+```
+然后在main.go中定义一个函数
+```go
+func InitConfig() {
+	workDir, _ := os.Getwd()                 // 获取当前工作目录
+	viper.SetConfigName("application")       // 要读取的配置文件名称
+	viper.SetConfigType("yml")               // 读取的文件的类型
+	viper.AddConfigPath(workDir + "/config") // 设置配置文件的路径
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
+
+}
+```
+main函数中要先运行上面的函数所以在main函数的第一行添加：InitConfig()
+
+然后修改数据初始化函数，即common下的database.go文件中的InitDB()函数
+```go
+// driverName := "mysql"
+	driverName := viper.GetString("datasource.driveName")
+	// host := "localhost"
+	host := viper.GetString("datasource.host")
+	// port := "3306"
+	port := viper.GetString("datasource.port")
+	// database := "ginessential"
+	database := viper.GetString("datasource.database")
+	// username := "root"
+	username := viper.GetString("datasource.username")
+	// password := "root"
+	password := viper.GetString("datasource.password")
+	// charset := "utf-8"
+	charset := viper.GetString("datasource.charset")
+```
+完成上述数据库的配置后，在main函数中修改监听端口
+```go
+port := viper.GetString("server.port")
+	if port != "" {
+		panic(r.Run(":" + port))
+	}
+	// 没有配置端口，使用默认的8080端口
+	panic(r.Run())
+```
+
 
 
 

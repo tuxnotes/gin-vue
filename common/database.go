@@ -5,19 +5,27 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
+	"github.com/spf13/viper"
 	"oceanlearn.teach/ginessential/model"
 )
 
 var DB *gorm.DB
 
 func InitDB() *gorm.DB {
-	driverName := "mysql"
-	host := "localhost"
-	port := "3306"
-	database := "ginessential"
-	username := "root"
-	password := "root"
-	charset := "utf-8"
+	// driverName := "mysql"
+	driverName := viper.GetString("datasource.driveName")
+	// host := "localhost"
+	host := viper.GetString("datasource.host")
+	// port := "3306"
+	port := viper.GetString("datasource.port")
+	// database := "ginessential"
+	database := viper.GetString("datasource.database")
+	// username := "root"
+	username := viper.GetString("datasource.username")
+	// password := "root"
+	password := viper.GetString("datasource.password")
+	// charset := "utf-8"
+	charset := viper.GetString("datasource.charset")
 	args := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=true",
 		username,
 		password,
