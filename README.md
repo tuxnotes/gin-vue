@@ -256,4 +256,42 @@ echo $第二部分 | base64 -D
 
 接着用中间件保护用户信息接口
 
+# 7 处理信息返回时的敏感字段及封装统一的返回格式
+## 7.1 处理敏感字段
+给前端只返回用户名和手机号，其他的都不用返回，所以这里定义一个UserDto结构体
+```go
+type UserDto struct { // 只返回给前端用户名和手机号，其他都不用返回
+	Name      string `json:"name"`
+	Telephone string `json:"telephone"`
+}
+```
+然后定义一个转换的函数
+```go
+func ToUserDto(user model.User) UserDto {
+	return UserDto{
+		Name: user.Name,
+		Telephone: user.Telephone,
+	}
+}
+```
+
+然后再controller中将user转换成UserDto
+```go
+func Info(ctx *gin.Context) {
+	// 获取用户信息的时候，用户已经通过了认证，索引从上下文中获取到用户的信息
+	user, _ := ctx.Get("user")
+	ctx.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"data": gin.H{"user": dto.ToUserDto(user.(model.User))},
+	})
+}
+```
+
+## 7.2 封装HTTP返回
+项目目录下新建response目录
+
+然后修改controller中的注册等模块的代码
+
+
+
 

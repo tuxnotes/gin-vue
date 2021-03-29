@@ -8,7 +8,9 @@ import (
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 	"oceanlearn.teach/ginessential/common"
+	"oceanlearn.teach/ginessential/dto"
 	"oceanlearn.teach/ginessential/model"
+	"oceanlearn.teach/ginessential/response"
 	"oceanlearn.teach/ginessential/util"
 )
 
@@ -26,25 +28,29 @@ func Register(ctx *gin.Context) {
 	}
 	// 检查密码
 	if len(password) < 6 {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "密码长度不足6位"})
+		response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "密码长度不足6位")
+		// ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "密码长度不足6位"})
 		return
 	}
 
 	// 检查手机号
 	if len(telephone) != 11 {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "手机号必须为11位"})
+		response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "手机号必须为11位")
+		// ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "手机号必须为11位"})
 		return
 	}
 	// 接下来采用查库的方式
 	if isTelephoneExist(DB, telephone) { // 如果用户存在就不允许注册
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "用户已存在"})
+		response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "用户已存在")
+		// ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "用户已存在"})
 		return
 	}
 	log.Println(name, telephone, password)
 	// 创建用户， 如果用户不存在，就新建用户
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil { // 如果有异常，则加密错误，这是一个系统级错误
-		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "加密错误"})
+		response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "加密错误")
+		// ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "加密错误"})
 		return
 	}
 	newUser := model.User{
@@ -53,7 +59,8 @@ func Register(ctx *gin.Context) {
 		Password:  string(hashedPassword), // 保存加密后的密码
 	}
 	DB.Create(&newUser)
-	ctx.JSON(200, gin.H{"code": 200, "msg": "注册成功"})
+	// ctx.JSON(200, gin.H{"code": 200, "msg": "注册成功"})
+	response.Success(ctx, nil, "注册成功")
 }
 
 func Login(ctx *gin.Context) {
@@ -92,9 +99,11 @@ func Login(ctx *gin.Context) {
 		return
 	}
 	// 返回结果
-	ctx.JSON(200, gin.H{"code": 200,
-		"data": gin.H{"token": token},
-		"msg":  "登录成功"})
+	// ctx.JSON(200, gin.H{"code": 200,
+	// 	"data": gin.H{"token": token},
+	// 	"msg":  "登录成功"})
+	response.Success(ctx, gin.H{"token": token}, "登录成功")
+
 }
 
 func Info(ctx *gin.Context) {
@@ -102,7 +111,7 @@ func Info(ctx *gin.Context) {
 	user, _ := ctx.Get("user")
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 200,
-		"data": gin.H{"user": user},
+		"data": gin.H{"user": dto.ToUserDto(user.(model.User))},
 	})
 }
 
