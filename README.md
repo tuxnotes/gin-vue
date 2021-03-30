@@ -355,6 +355,162 @@ port := viper.GetString("server.port")
 	// 没有配置端口，使用默认的8080端口
 	panic(r.Run())
 ```
+# 9 前端开发环境的搭建
+
+## 9.1 node安装
+
+前端开发环境的搭建，首先需要安装node.js.有两种安装方式：
+1. 通过官网下载相应的安装包进行安装
+2. 使用nvm，mvn是node的版本管理器，通过nvm可以安装和管理多个node版本：推荐方式
+
+Windows环境的nvm是通过nvm-windows安装，常用nvm命令如下：
+```
+nvm list available
+nvm install v10.14.2
+nvm ls
+```
+安装完成后使用node -v显示node的版本，则说明安装成功
+
+## 9.2 yarn安装
+yarn是node的包管理工具，类似于Java的maven。打开官网，选的对应的操作系统。
+
+## 9.3 vue-cli安装
+
+```
+yarn global add @vue/cli
+```
+# 10 创建项目代码规范
+
+使用vue-cli创建并运行vue项目，首先查看帮助文档：
+```bash
+vue -h
+```
+
+## 10.1 创建项目
+
+```
+vue create ginessential-vue
+```
+
+选择手动选择特性
+
+空格选中babel router vuex eslint
+
+```
+PS C:\Users\aspire\Projects\vue> vue create ginessential-vue
+?  Your connection to the default yarn registry seems to be slow.
+   Use https://registry.npm.taobao.org for faster installation? Yes
+
+
+Vue CLI v4.5.12
+? Please pick a preset: Manually select features
+? Check the features needed for your project: Choose Vue version, Babel, Router, Vuex, CSS Pre-processors, Linter
+? Choose a version of Vue.js that you want to start the project with 3.x (Preview)
+? Use history mode for router? (Requires proper server setup for index fallback in production) Yes
+? Pick a CSS pre-processor (PostCSS, Autoprefixer and CSS Modules are supported by default): Sass/SCSS (with node-sass)
+? Pick a linter / formatter config: Airbnb
+? Pick additional lint features: Lint on save
+? Where do you prefer placing config for Babel, ESLint, etc.? In dedicated config files
+? Save this as a preset for future projects? No
+? Pick the package manager to use when installing dependencies: Yarn
+
+
+Vue CLI v4.5.12
+✨  Creating project in C:\Users\aspire\Projects\vue\ginessential-vue.
+�  Initializing git repository...
+⚙️  Installing CLI plugins. This might take a while...
+
+yarn install v1.22.5
+info No lockfile found.
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+info fsevents@2.3.2: The platform "win32" is incompatible with this module.
+info "fsevents@2.3.2" is an optional dependency and failed compatibility check. Excluding it from installation.
+info fsevents@1.2.13: The platform "win32" is incompatible with this module.
+info "fsevents@1.2.13" is an optional dependency and failed compatibility check. Excluding it from installation.
+                                                                                                                                                                                                                                                success Saved lockfile.
+Done in 28.65s.
+�  Invoking generators...
+�  Installing additional dependencies...
+
+yarn install v1.22.5
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+info fsevents@2.3.2: The platform "win32" is incompatible with this module.
+info "fsevents@2.3.2" is an optional dependency and failed compatibility check. Excluding it from installation.
+info fsevents@1.2.13: The platform "win32" is incompatible with this module.
+info "fsevents@1.2.13" is an optional dependency and failed compatibility check. Excluding it from installation.
+[3/4] Linking dependencies...
+[4/4] Building fresh packages...
+success Saved lockfile.
+Done in 18.45s.
+⚓  Running completion hooks...
+
+�  Generating README.md...
+
+�  Successfully created project ginessential-vue.
+�  Get started with the following commands:
+
+ $ cd ginessential-vue
+ $ yarn serve
+
+PS C:\Users\aspire\Projects\vue> cd .\ginessential-vue\                                   
+yarn run v1.22.5re\Projects\vue\ginessential-vue> yarn serve
+$ vue-cli-service serve
+ INFO  Starting development server...
+98% after emitting CopyPlugin
+
+ DONE  Compiled successfully in 4173ms                                                                        3:02:37 PM
+
+
+  App running at:
+  - Local:   http://localhost:8080/
+  - Network: http://10.168.1.211:8080/
+
+  Note that the development build is not optimized.
+  To create a production build, run yarn build.
+```
+
+## 10.2 ESlint的配置和使用
+
+打开src/main.js，先写一段测试代码
+
+```js
+ const name = "hayden"
+name = "zhou"
+
+function sayHello(who) {
+    console.log("hello" + who)
+}
+
+sayHello(name)
+```
+
+上面的代码编译会报错的，因为常量不能修改，下面使用eslint和vscode的eslint扩展对其进行修复
+
+eslint的作用：
+
+1. 检查语法错误
+2. 检查代码规范
+
+通常使用vscode的eslint扩展进行代码格式化
+
+eslint的配置
+
+eslint由一些列的规则组成，如果我们的团队使用4空格的缩进，如果要修改，则打开.eslint.js配置文件
+
+```js
+rules: {
+    'indent': ['warn', 4],
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+  },
+```
+
+# 11 使用bootstrap创建登录页面
+
+编写注册登录界面及前端表单验证
+
 
 
 
